@@ -144,6 +144,29 @@ button:focus-visible{outline:1px solid var(--ink);outline-offset:4px}
 html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 body{position:fixed;inset:0;width:100%}
 .stage{position:absolute;left:0;right:0;top:env(safe-area-inset-top,0px);transform-origin:top center}
+/* v4: train ticket, 9-item list */
+.tk{margin-top:8px;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:10px 0 11px}
+.tk .top{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--ink-2)}
+.tk .route{display:flex;align-items:baseline;gap:10px;margin-top:4px;font-size:14px;font-weight:700}
+.tk .route .n{font-size:17px;font-weight:600}
+.tk .route .ar{color:var(--ink-3);font-weight:400}
+.tk .seats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.tk .seats div{border:1px solid var(--accent);border-radius:4px;padding:6px 10px 7px}
+.tk .seats small{display:block;font-size:11px;color:var(--accent);font-weight:700;letter-spacing:.08em}
+.tk .seats b{display:block;font-size:16px;font-weight:700;white-space:nowrap;margin-top:1px}
+.tk .seats b .n{font-size:20px;font-weight:700}
+.tk .meta{margin-top:8px;font-size:12px;color:var(--ink-2)}
+.pack .grid .chk{padding:6px 0}
+.pack .grid .chk:nth-last-child(-n+2){border-bottom:1px solid var(--rule)}
+.pack .grid .chk:last-child{border-bottom:0}
+/* v5: tighten */
+.pack .grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.pack .grid .chk .lb{font-size:13.5px}
+.chk .lb i{font-style:normal;font-size:11.5px;font-weight:500;color:var(--ink-2);margin-left:5px}
+.row{padding:8px 0 7px}
+.tl .x{padding:1px 0 10px}
+.tk .meta{margin-top:2px}
+.pack h3{margin-bottom:0}
 </style>
 </head>
 <body>
@@ -193,6 +216,9 @@ body{position:fixed;inset:0;width:100%}
         <button class="chk" role="checkbox" aria-checked="false" data-k="carryon"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7.5"/></svg></span><span class="lb">機内持ち込み荷物</span></button>
         <button class="chk" role="checkbox" aria-checked="false" data-k="mask"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7.5"/></svg></span><span class="lb">マスク</span></button>
         <button class="chk" role="checkbox" aria-checked="false" data-k="umbrella"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7.5"/></svg></span><span class="lb">折りたたみ傘</span></button>
+        <button class="chk" role="checkbox" aria-checked="false" data-k="clothes"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7.5"/></svg></span><span class="lb">着替え</span></button>
+        <button class="chk" role="checkbox" aria-checked="false" data-k="shoes"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7.5"/></svg></span><span class="lb">靴<i>サンダル</i></span></button>
+        <button class="chk" role="checkbox" aria-checked="false" data-k="ecobag"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7.5"/></svg></span><span class="lb">エコバッグ<i>チャック付き</i></span></button>
         </div>
       </div>
     </section>
@@ -205,6 +231,14 @@ body{position:fixed;inset:0;width:100%}
         <li><span class="t">18:52</span><span class="d"></span><div class="x"><b>成田駅 着</b><span>3番線　ホテル行きバス</span></div></li>
         <li class="key"><span class="t">20:00</span><span class="d"></span><div class="x"><b>成田ゲートウェイホテルに到着</b></div></li>
       </ol>
+      <div class="tk">
+        <div class="top"><span>成田エクスプレス（横浜）47号（特急）</span></div>
+        <div class="meta">指定席・チケットレス割引</div>
+        <div class="seats">
+          <div><small>座席</small><b><span class="n">9</span>号車 <span class="n">1</span>番<span class="n">A</span>席</b></div>
+          <div><small>座席</small><b><span class="n">9</span>号車 <span class="n">1</span>番<span class="n">B</span>席</b></div>
+        </div>
+      </div>
     </section>
 
     <section id="p2" role="tabpanel" aria-labelledby="s2" hidden>
