@@ -7,8 +7,8 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="台湾旅行">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#131313" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F2F2EF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E0E0E" media="(prefers-color-scheme: dark)">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" type="image/png" href="icon-180.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -19,7 +19,9 @@
 <style>
 :root{
   color-scheme:light;
+  --page:#F2F2EF;
   --bg:#FFFFFF;
+  --line:#E3E2DE;
   --ink:#141414;
   --ink-2:#5E5E5E;
   --ink-3:#A0A0A0;
@@ -29,14 +31,14 @@
   --jp:"Zen Kaku Gothic New","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
-  background:var(--bg);
+  background:var(--page);
 }
 @media (prefers-color-scheme: dark){
-  :root{color-scheme:dark;--bg:#131313;--ink:#EDEDED;--ink-2:#A6A6A6;--ink-3:#686868;--rule:#2B2B2B;--accent:#E5533C}
+  :root{color-scheme:dark;--page:#0E0E0E;--line:#262626;--bg:#181818;--ink:#EDEDED;--ink-2:#A6A6A6;--ink-3:#686868;--rule:#2B2B2B;--accent:#E5533C}
 }
 *{box-sizing:border-box}
 html,body{touch-action:manipulation}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--jp);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--jp);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
 body,body *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 [hidden]{display:none!important}
 button{font:inherit;color:inherit;background:none;border:0;padding:0;margin:0;cursor:pointer;-webkit-appearance:none;appearance:none;text-align:left}
@@ -100,6 +102,35 @@ button:focus-visible{outline:1px solid var(--ink);outline-offset:4px}
 .fl .mid span{position:relative;background:var(--bg);padding:0 8px}
 .fl .ap{display:flex;justify-content:space-between;gap:12px;margin-top:6px;font-size:12px;color:var(--ink-2);line-height:1.45}
 .fl .ap span:last-child{text-align:right}
+/* v2: sheets, seal, checklist */
+.wrap{padding:12px 16px 12px}
+.hd{border-bottom:0;padding:2px 4px 12px}
+.title{display:flex;align-items:center;gap:10px;margin-top:4px}
+.seal{flex:none;width:32px;height:32px;display:grid;place-items:center;background:var(--accent);color:#fff;border-radius:4px;font-size:18px;font-weight:700;line-height:1}
+.hd h1{margin:0}
+.sheet{background:var(--bg);border:1px solid var(--line);border-radius:14px}
+.sec{margin-top:0;padding:2px 14px}
+.row{color:var(--ink-2);grid-template-columns:24px 1fr auto;padding:10px 0 9px;align-items:center}
+.sec .row:last-child{border-bottom:0}
+.row .i{width:20px;height:20px;display:grid;place-items:center;border:1px solid var(--ink-3);border-radius:3px;font-size:11.5px;color:var(--ink-2)}
+.row[aria-selected="true"] .i{background:var(--accent);border-color:var(--accent);color:#fff}
+.panels{margin-top:10px;padding:14px 16px 10px}
+.ph .i{width:20px;height:20px;display:grid;place-items:center;background:var(--accent);color:#fff;border-radius:3px;font-size:11.5px;align-self:center}
+.ph{align-items:center}
+.pack{margin-top:6px;padding-top:10px;border-top:1px solid var(--rule)}
+.pack h3{margin:0 0 4px;font-size:13px;font-weight:700;color:var(--ink-2);letter-spacing:.08em}
+.chk{width:100%;display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid var(--rule);font-size:15.5px;font-weight:500}
+.pack .chk:last-child{border-bottom:0}
+.chk .box{flex:none;width:20px;height:20px;border:1.5px solid var(--ink);border-radius:3px;display:grid;place-items:center}
+.chk .box svg{width:14px;height:14px;fill:none;stroke:#fff;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;visibility:hidden}
+.chk[aria-checked="true"] .box{background:var(--ink);border-color:var(--ink)}
+.chk[aria-checked="true"] .box svg{visibility:visible;stroke:var(--bg)}
+.chk[aria-checked="true"] .lb{color:var(--ink-3);text-decoration:line-through}
+.chk.must .lb{color:var(--accent);font-weight:700}
+.chk.must .box{border-color:var(--accent)}
+.chk.must[aria-checked="true"] .box{background:var(--accent)}
+.chk.must[aria-checked="true"] .lb{color:var(--ink-3)}
+.chk .lb small{font-size:12.5px;font-weight:500;color:var(--ink-2);margin-left:4px}
 </style>
 </head>
 <body>
@@ -108,7 +139,7 @@ button:focus-visible{outline:1px solid var(--ink);outline-offset:4px}
   <header class="hd">
     <div>
       <p class="dates"><span class="n">10.05 – 10.08</span>　10.04 成田で前泊</p>
-      <h1>台湾旅行</h1>
+      <div class="title"><span class="seal" aria-hidden="true">台</span><h1>台湾旅行</h1></div>
     </div>
     <div class="cd">
       <span class="k" id="cd-k">出発まで</span>
@@ -116,7 +147,7 @@ button:focus-visible{outline:1px solid var(--ink);outline-offset:4px}
     </div>
   </header>
 
-  <nav class="sec" role="tablist" aria-label="全体の流れ">
+  <nav class="sec sheet" role="tablist" aria-label="全体の流れ">
     <button class="row" role="tab" id="s0" aria-controls="p0" aria-selected="true">
       <span class="i">1</span><span class="nm">家 → 横浜</span><span class="tm n">16:30 – 17:15</span>
     </button>
@@ -131,7 +162,7 @@ button:focus-visible{outline:1px solid var(--ink);outline-offset:4px}
     </button>
   </nav>
 
-  <div class="panels" id="panels">
+  <div class="panels sheet" id="panels">
 
     <section id="p0" role="tabpanel" aria-labelledby="s0">
       <h2 class="ph"><span class="i">1</span>家 → 横浜<small>10/4（日）夕方</small></h2>
@@ -140,6 +171,13 @@ button:focus-visible{outline:1px solid var(--ink);outline-offset:4px}
         <li><span class="t">16:54</span><span class="d"></span><div class="x"><b>金沢文庫駅 発</b></div></li>
         <li class="key"><span class="t">17:15</span><span class="d"></span><div class="x"><b>横浜駅で集合</b></div></li>
       </ol>
+      <div class="pack">
+        <h3>持ち物</h3>
+        <button class="chk must" role="checkbox" aria-checked="false" data-k="passport"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7.5"/></svg></span><span class="lb">パスポート</span></button>
+        <button class="chk" role="checkbox" aria-checked="false" data-k="battery"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7.5"/></svg></span><span class="lb">モバイルバッテリー<small>（手荷物に）</small></span></button>
+        <button class="chk" role="checkbox" aria-checked="false" data-k="cash"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7.5"/></svg></span><span class="lb">お金（現金）</span></button>
+        <button class="chk" role="checkbox" aria-checked="false" data-k="carryon"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7.5"/></svg></span><span class="lb">機内持ち込み荷物</span></button>
+      </div>
     </section>
 
     <section id="p1" role="tabpanel" aria-labelledby="s1" hidden>
@@ -222,6 +260,15 @@ button:focus-visible{outline:1px solid var(--ink);outline-offset:4px}
     var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
     if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.6) show(cur + (dx < 0 ? 1 : -1));
   }, { passive: true });
+  [].forEach.call(document.querySelectorAll('.chk'), function(c){
+    var key = 'tw-chk-' + c.getAttribute('data-k');
+    try { if (localStorage.getItem(key) === '1') c.setAttribute('aria-checked', 'true'); } catch (e) {}
+    c.addEventListener('click', function(){
+      var on = c.getAttribute('aria-checked') !== 'true';
+      c.setAttribute('aria-checked', on ? 'true' : 'false');
+      try { localStorage.setItem(key, on ? '1' : '0'); } catch (e) {}
+    });
+  });
   var start = 0;
   try { var s = parseInt(localStorage.getItem('tw-seg'), 10); if (s >= 0 && s < 4) start = s; } catch (e) {}
   show(start);
