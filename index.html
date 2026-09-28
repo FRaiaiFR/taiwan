@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="台湾旅行">
@@ -131,10 +131,23 @@ button:focus-visible{outline:1px solid var(--ink);outline-offset:4px}
 .chk.must[aria-checked="true"] .box{background:var(--accent)}
 .chk.must[aria-checked="true"] .lb{color:var(--ink-3)}
 .chk .lb small{font-size:12.5px;font-weight:500;color:var(--ink-2);margin-left:4px}
+/* v3: 2-column checklist, locked viewport */
+.pack .grid{display:grid;grid-template-columns:1fr 1fr;column-gap:14px}
+.pack .grid .chk{border-bottom:1px solid var(--rule);align-items:flex-start;padding:8px 0}
+.pack .grid .chk:nth-last-child(-n+2){border-bottom:0}
+.chk .box{margin-top:1px}
+.chk .lb{display:block;font-size:14px;line-height:1.35;min-width:0;white-space:nowrap;letter-spacing:-.01em}
+.pack .grid .chk{gap:10px}
+.chk .lb small,.chk .lb em{display:block;margin:1px 0 0;font-style:normal;font-size:11.5px;font-weight:500;color:var(--ink-2)}
+.chk.must .lb em{color:var(--accent);font-weight:700}
+.chk.must[aria-checked="true"] .lb em{color:var(--ink-3)}
+html,body{height:100%;overflow:hidden;overscroll-behavior:none}
+body{position:fixed;inset:0;width:100%}
+.stage{position:absolute;left:0;right:0;top:env(safe-area-inset-top,0px);transform-origin:top center}
 </style>
 </head>
 <body>
-<main class="wrap">
+<div class="stage" id="stage"><main class="wrap">
 
   <header class="hd">
     <div>
@@ -173,10 +186,14 @@ button:focus-visible{outline:1px solid var(--ink);outline-offset:4px}
       </ol>
       <div class="pack">
         <h3>持ち物</h3>
-        <button class="chk must" role="checkbox" aria-checked="false" data-k="passport"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7.5"/></svg></span><span class="lb">パスポート</span></button>
-        <button class="chk" role="checkbox" aria-checked="false" data-k="battery"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7.5"/></svg></span><span class="lb">モバイルバッテリー<small>（手荷物に）</small></span></button>
+        <div class="grid">
+        <button class="chk must" role="checkbox" aria-checked="false" data-k="passport"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7.5"/></svg></span><span class="lb">パスポート<em>原本</em></span></button>
+        <button class="chk" role="checkbox" aria-checked="false" data-k="battery"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7.5"/></svg></span><span class="lb">モバイルバッテリー<small>手荷物に</small></span></button>
         <button class="chk" role="checkbox" aria-checked="false" data-k="cash"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7.5"/></svg></span><span class="lb">お金（現金）</span></button>
         <button class="chk" role="checkbox" aria-checked="false" data-k="carryon"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7.5"/></svg></span><span class="lb">機内持ち込み荷物</span></button>
+        <button class="chk" role="checkbox" aria-checked="false" data-k="mask"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7.5"/></svg></span><span class="lb">マスク</span></button>
+        <button class="chk" role="checkbox" aria-checked="false" data-k="umbrella"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7.5"/></svg></span><span class="lb">折りたたみ傘</span></button>
+        </div>
       </div>
     </section>
 
@@ -222,7 +239,7 @@ button:focus-visible{outline:1px solid var(--ink);outline-offset:4px}
     </section>
 
   </div>
-</main>
+</main></div>
 
 <script>
 (function(){
@@ -244,6 +261,7 @@ button:focus-visible{outline:1px solid var(--ink);outline-offset:4px}
     panels.forEach(function(p, j){ p.hidden = j !== i; });
     cur = i;
     try { localStorage.setItem('tw-seg', String(i)); } catch (e) {}
+    if (typeof fit === 'function') fit();
   }
   rows.forEach(function(r, j){
     r.addEventListener('click', function(){ show(j); });
@@ -269,9 +287,23 @@ button:focus-visible{outline:1px solid var(--ink);outline-offset:4px}
       try { localStorage.setItem(key, on ? '1' : '0'); } catch (e) {}
     });
   });
+  /* 画面を固定：スクロール・ズームを止める */
+  document.addEventListener('touchmove', function(e){ e.preventDefault(); }, { passive: false });
+  ['gesturestart','gesturechange','gestureend'].forEach(function(t){ document.addEventListener(t, function(e){ e.preventDefault(); }, { passive: false }); });
+  /* 小さい画面では全体を縮めて1画面に収める */
+  var stage = document.getElementById('stage');
+  function fit(){
+    stage.style.transform = '';
+    var avail = window.innerHeight, h = stage.scrollHeight;
+    var cs = getComputedStyle(document.documentElement);
+    avail -= (parseFloat(cs.paddingTop) || 0) + (parseFloat(cs.paddingBottom) || 0);
+    if (h > avail && h > 0) stage.style.transform = 'scale(' + (avail / h) + ')';
+  }
+  window.addEventListener('resize', fit);
   var start = 0;
   try { var s = parseInt(localStorage.getItem('tw-seg'), 10); if (s >= 0 && s < 4) start = s; } catch (e) {}
   show(start);
+  fit();
 })();
 </script>
 </body>
